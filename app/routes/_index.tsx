@@ -1,12 +1,16 @@
-// app/routes/_index.tsx
 import { useLoaderData, Form, useFetcher } from "@remix-run/react";
 
 import { todos } from "../../src/db/schema";
 
 import { json, type LoaderFunction, type ActionFunction } from "@remix-run/node";
-import { desc, asc } from "drizzle-orm";
+import { desc, asc, eq } from "drizzle-orm";
 import { useState } from "react";
 import db from "src/db";
+import styles from "~/styling/todo.css?url";
+
+export function links() {
+  return [{ rel: "stylesheet", href: styles }];
+}
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
@@ -35,11 +39,11 @@ export const action: ActionFunction = async ({ request }) => {
     });
   }
 
-  // if(intent === "toggleDone"){
-  //   const id = parseInt(formData.get('id') as string);
-  //   const currentTodo = await db.select().from(todos).where(todos.id.eq(id));
-  //   await db.update(todos).set({done: !currentTodo[0].done}).where(todos.id.eq(id));
-  // }
+  if(intent === "toggleDone"){
+    const id = parseInt(formData.get('id') as string);
+    const currentTodo = await db.select().from(todos).where(eq(todos.id, id));
+    await db.update(todos).set({done: !currentTodo[0].done}).where(eq(todos.id, id));
+  }
 
   return null;
 };
