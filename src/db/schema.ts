@@ -1,4 +1,3 @@
-// app/db/schema.ts
 import { serial, text, boolean, integer, pgTable } from 'drizzle-orm/pg-core';
 
 export const todos = pgTable('todos', {
