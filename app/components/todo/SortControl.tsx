@@ -1,4 +1,3 @@
-// /developer/practice/my-todo-app/app/components/todo/SortControl.tsx
 import { useNavigate } from "@remix-run/react";
 import Button from "../ui/Button";
 

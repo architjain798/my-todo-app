@@ -1,4 +1,3 @@
-// -todo-app/app/components/todo/TodoList.tsx
 import type { Todo } from "../../types/todo";
 import TodoItem from "./TodoItem";
 import EmptyState from "./EmptyState";
