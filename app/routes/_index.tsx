@@ -1,8 +1,8 @@
-import { useLoaderData, Form, useFetcher } from "@remix-run/react";
+import { useLoaderData, Form, useFetcher, useNavigate, useSearchParams } from "@remix-run/react";
 import { todos } from "../../src/db/schema";
 import { json, type LoaderFunction, type ActionFunction } from "@remix-run/node";
 import { desc, asc, eq } from "drizzle-orm";
-import { useState } from "react";
+import { useEffect } from "react";
 import db from "src/db";
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -48,10 +48,15 @@ export const action: ActionFunction = async ({ request }) => {
 export default function Index() {
   const { todos } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
-  const [order, setOrder] = useState("asc");
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  
+  // Get the order from URL search params instead of local state
+  const currentOrder = searchParams.get("order") || "asc";
 
   const toggleOrder = () => {
-    setOrder(prev => prev === 'asc' ? 'desc' : 'asc');
+    const newOrder = currentOrder === "asc" ? "desc" : "asc";
+    navigate(`?order=${newOrder}`);
   };
 
   return (
@@ -116,10 +121,10 @@ export default function Index() {
             onClick={toggleOrder}
             className="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 mr-2 ${order === 'asc' ? 'transform rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 mr-2 ${currentOrder === 'asc' ? 'transform rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
             </svg>
-            Sort by Priority {order === 'asc' ? '(Low to High)' : '(High to Low)'}
+            Sort by Priority {currentOrder === 'asc' ? '(Low to High)' : '(High to Low)'}
           </button>
         </div>
         
@@ -135,7 +140,7 @@ export default function Index() {
           ) : (
             <ul className="divide-y divide-gray-200 dark:divide-gray-700">
               {todos.map((todo: Todo) => (
-                <li key={todo.id} className={`px-6 py-4 ${todo.done ? 'bg-gray-50 dark:bg-gray-700/50' : ''}`}>
+                <li key={todo.id} className={`px-6 py-4 ${todo.done ? 'bg-gray-50 dark:bg-gray-700/50' : ''} transition-all hover:bg-gray-50 dark:hover:bg-gray-700/70`}>
                   <div className="flex justify-between items-center">
                     <div className="flex items-start space-x-4">
                       <div className={`flex-shrink-0 h-6 w-6 rounded-full flex items-center justify-center mt-1 ${
@@ -180,7 +185,7 @@ export default function Index() {
                             todo.done 
                               ? 'text-yellow-700 bg-yellow-100 hover:bg-yellow-200 dark:text-yellow-300 dark:bg-yellow-900/30 dark:hover:bg-yellow-900/50' 
                               : 'text-green-700 bg-green-100 hover:bg-green-200 dark:text-green-300 dark:bg-green-900/30 dark:hover:bg-green-900/50'
-                          } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500`}
+                          } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all`}
                         >
                           {todo.done ? 'Undo' : 'Complete'}
                         </button>
@@ -191,7 +196,7 @@ export default function Index() {
                           type="submit" 
                           name="intent" 
                           value="delete"
-                          className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 dark:text-red-300 dark:bg-red-900/30 dark:hover:bg-red-900/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                          className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 dark:text-red-300 dark:bg-red-900/30 dark:hover:bg-red-900/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all"
                         >
                           Delete
                         </button>
