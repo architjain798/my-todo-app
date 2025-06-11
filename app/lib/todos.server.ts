@@ -1,7 +1,6 @@
 import { todos } from "../../src/db/schema";
 import { eq, desc, asc } from "drizzle-orm";
 import db from "../../src/db";
-import type { Todo } from "../types/todo";
 
 export async function getAllTodos(sortOrder: "asc" | "desc" = "asc") {
   const order = sortOrder === "desc" ? desc(todos.priority) : asc(todos.priority);

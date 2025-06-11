@@ -50,12 +50,9 @@ export default function Index() {
         <div className="text-center mb-10">
           <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-600">
-              Task Master
+              To Do App
             </span>
           </h1>
-          <p className="mt-3 text-base text-gray-500 dark:text-gray-400 max-w-md mx-auto">
-            Organize your tasks efficiently with our modern todo application.
-          </p>
         </div>
 
         {/* Add Todo Form */}
